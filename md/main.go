@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	filename = ""
-	redo     = false
-	theme    *template.Template
+	filename  = ""
+	targetDir = ""
+	redo      = false
+	theme     *template.Template
 )
 
 const (
@@ -44,6 +45,7 @@ func init() {
 	// flag
 	flag.BoolVar(&redo, "r", false, "-r [true]")
 	flag.StringVar(&filename, "f", "README.md", "-f readme.md")
+	flag.StringVar(&targetDir, "d", "./", "-d ./static")
 
 	// theme
 	// thm_b := readFile(thm_file)
@@ -80,7 +82,7 @@ func renderFile(filename string, redo bool) bool {
 	data := make(map[string]interface{})
 	data["MDContent"] = goutils.ToString(html)
 	data["Title"] = filename
-	of, err := os.OpenFile(filename+".html", os.O_CREATE|os.O_RDWR, 0666)
+	of, err := os.OpenFile(targetDir+string(os.PathSeparator)+filename+".html", os.O_CREATE|os.O_RDWR, 0666)
 	defer of.Close()
 	if goutils.CheckErr(err) {
 		return false
