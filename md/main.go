@@ -71,6 +71,10 @@ func renderFile(filename string, redo bool) bool {
 	if !redo && nil == err {
 		return false
 	}
+	if nil == err {
+		err = os.Remove(filename + ".html")
+		goutils.CheckErr(err)
+	}
 	input := readFile(filename)
 	if nil == input {
 		return false
