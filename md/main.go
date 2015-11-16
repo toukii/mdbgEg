@@ -31,9 +31,19 @@ const (
     <link href="http://static.bootcss.com/www/assets/css/site.min.css?v5" rel="stylesheet">
     <!-- <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-6670887f84dea33391b25bf5af0455816ab82a9bec8f4f5e4d8160d53b08c0f3.css" integrity="sha256-ZnCIf4TeozORslv1rwRVgWq4Kpvsj09eTYFg1TsIwPM=" media="all" rel="stylesheet" /> -->
     <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github2-53964e9b93636aa437196c028e3b15febd3c6d5a52d4e8368a9c2894932d294e.css" integrity="sha256-U5ZOm5NjaqQ3GWwCjjsV/r08bVpS1Og2ipwolJMtKU4=" media="all" rel="stylesheet" />
-    {{.MoreCss}}
 </head>
 	<body>
+		<div class="container">
+			<nav class="navbar navbar-default" role="navigation" id="navbar">
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<ul class="nav navbar-nav" id="menu">
+						<li><a href="http://mdblog.daoapp.io/">Home</a></li>
+						<li><a href="http://mdblog.daoapp.io/">Go</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
 		<div class="container">
 			{{.MDContent}}
 		</div>
