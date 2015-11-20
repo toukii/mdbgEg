@@ -62,7 +62,7 @@ func init() {
 	flag.BoolVar(&redo, "r", false, "-r [true]")
 	flag.StringVar(&filename, "f", "README.md", "-f readme.md")
 	flag.StringVar(&targetDir, "d", "./", "-d ./static")
-	flag.StringVar(&ext, "e", "./", "-e ./static")
+	flag.StringVar(&ext, "e", "mdf", "-e static")
 
 	// theme
 	// thm_b := readFile(thm_file)
@@ -74,17 +74,19 @@ func init() {
 	}
 
 	base, _ = os.Getwd()
-	base += string(os.PathSeparator) + "mdf" + string(os.PathSeparator)
 }
 
 func main() {
 	flag.Parse()
+	base += string(os.PathSeparator) + ext
+
 	if renderFile(filename, redo) {
 		fmt.Printf("Successfully parsed %s ==> %s.html\n", filename, filename)
 	} else {
 		fmt.Printf("Failed to parse %s ==> %s.html\n", filename, filename)
 	}
-	ExtractFiles("./", "target", ".md")
+	fmt.Println(ext)
+	ExtractFiles(ext)
 }
 
 func renderFile(filename string, redo bool) bool {
@@ -136,17 +138,22 @@ func WalkFunc(path string, info os.FileInfo, err error) error {
 	if strings.EqualFold(".git", info.Name()) {
 		return filepath.SkipDir
 	}
-	fmt.Printf("path:%s\n", path)
-	// fmt.Printf("info:%v\n", info)
-	// fmt.Printf("err:%e\n", err)
+	if strings.Contains(path, ext) {
+		return filepath.SkipDir
+	}
+	if info.IsDir() {
+		err = os.Mkdir(base+string(os.PathSeparator)+path, 0644)
+		if goutils.CheckErr(err) {
+			return nil
+		}
+	}
+
 	if strings.EqualFold(".md", filepath.Ext(path)) {
 		orf, err := os.OpenFile(path, os.O_RDONLY, 0644)
 		defer orf.Close()
 		if goutils.CheckErr(err) {
 			return nil
 		}
-		fmt.Printf("target:%s\n", base+string(os.PathSeparator)+path)
-		os.Create(base + string(os.PathSeparator) + path)
 		owf, err := os.OpenFile(base+string(os.PathSeparator)+path, os.O_CREATE|os.O_WRONLY, 0622)
 		defer owf.Close()
 		if goutils.CheckErr(err) {
@@ -158,10 +165,6 @@ func WalkFunc(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-func ExtractFiles(base, target, ext string) {
-	// fi, err := os.Lstat(target)
-	// if goutils.CheckErr(err) {
-	// 	return
-	// }
+func ExtractFiles(base string) {
 	filepath.Walk("./", WalkFunc)
 }
