@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/everfore/exc"
 	"github.com/shaalx/goutils"
 	"io"
 	"os"
@@ -17,6 +18,8 @@ var (
 	base  = ""   // base path
 	ext   = ".md"
 	force = false
+
+	exc_cmd *exc.CMD
 )
 
 func init() {
@@ -27,6 +30,7 @@ func init() {
 	flag.BoolVar(&force, "f", false, "-f [true] force")
 	flag.Parse()
 	home = _home + Spor + base
+	exc_cmd = exc.NewCMD("ls").Debug()
 }
 
 func main() {
@@ -44,9 +48,10 @@ func main() {
 		}
 	}
 	Extraction(from)
+	filepath.Walk(from, RenderFunc)
 }
 
-func WalkFunc(path string, info os.FileInfo, err error) error {
+func ExtractFunc(path string, info os.FileInfo, err error) error {
 	if strings.EqualFold(".git", info.Name()) {
 		return filepath.SkipDir
 	}
@@ -77,6 +82,28 @@ func WalkFunc(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
+func RenderFunc(path string, info os.FileInfo, err error) error {
+	if strings.EqualFold(".git", info.Name()) {
+		return filepath.SkipDir
+	}
+	if strings.HasPrefix(path, base) {
+		return filepath.SkipDir
+	}
+	if !info.IsDir() && strings.EqualFold(ext, filepath.Ext(path)) {
+		dir := filepath.Dir(path)
+		if dir == "." {
+			dir = ""
+		}
+		// fromd := strings.Replace(home+Spor+path, "/", "\\\\", -1)
+		// tod := strings.Replace(home+Spor+dir, "/", "\\\\", -1)
+		// cmd := fmt.Sprintf("md -r -f %s -d %s", fromd, tod)
+		cmd := fmt.Sprintf("md -r -f %s -d %s", home+Spor+path, home+Spor+dir)
+		fmt.Println(cmd)
+		exc_cmd.Reset(cmd).Wd().Execute()
+	}
+	return nil
+}
+
 func Extraction(from string) {
-	filepath.Walk(from, WalkFunc)
+	filepath.Walk(from, ExtractFunc)
 }
