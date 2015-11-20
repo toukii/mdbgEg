@@ -12,39 +12,45 @@ import (
 
 var (
 	Spor  = string(os.PathSeparator)
-	home  = "" // home path == pwd + Spor + base
-	base  = "" // base path
+	from  = "./" // extration files in from
+	home  = ""   // home path == pwd + Spor + base
+	base  = ""   // base path
 	ext   = ".md"
 	force = false
 )
 
 func init() {
 	_home, _ := os.Getwd()
-	flag.StringVar(&base, "b", "MDFs", "-b mdfs")
-	flag.StringVar(&ext, "e", ".md", "-e .go")
-	flag.BoolVar(&force, "f", false, "-f [true]")
+	// flag.StringVar(&from, "from", "./", "-from MDFs")
+	flag.StringVar(&base, "base", "MDFs", "-base mdfs")
+	flag.StringVar(&ext, "ext", ".md", "-ext .go")
+	flag.BoolVar(&force, "f", false, "-f [true] force")
 	flag.Parse()
 	home = _home + Spor + base
 }
 
 func main() {
-	fmt.Println(base)
+	fmt.Printf("Extraction base path:%s.\n", base)
 	_, err := os.Lstat(home)
-	if !goutils.CheckErr(err) {
+	if err == nil {
 		if force {
-			os.Remove(base)
+			err = os.RemoveAll(base)
+			if goutils.CheckErr(err) {
+				return
+			}
 		} else {
 			fmt.Printf("%s has existed!", home)
+			return
 		}
 	}
-	Extraction("./")
+	Extraction(from)
 }
 
 func WalkFunc(path string, info os.FileInfo, err error) error {
 	if strings.EqualFold(".git", info.Name()) {
 		return filepath.SkipDir
 	}
-	if strings.Contains(path, base) {
+	if strings.HasPrefix(path, base) {
 		return filepath.SkipDir
 	}
 	if info.IsDir() {
@@ -66,11 +72,11 @@ func WalkFunc(path string, info os.FileInfo, err error) error {
 			return nil
 		}
 		n, err := io.Copy(owf, orf)
-		fmt.Printf("n:%d,err:%v\n", n, err)
+		fmt.Printf("%s: %d bytes.\n", path, n)
 	}
 	return nil
 }
 
-func Extraction(base string) {
-	filepath.Walk("./", WalkFunc)
+func Extraction(from string) {
+	filepath.Walk(from, WalkFunc)
 }
