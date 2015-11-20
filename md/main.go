@@ -3,15 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"strings"
+	"io/ioutil"
 	// "github.com/microcosm-cc/bluemonday"
 	// "github.com/russross/blackfriday"
 	"github.com/shaalx/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
-	"io"
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"text/template"
 )
 
@@ -20,9 +17,6 @@ var (
 	targetDir = ""
 	redo      = false
 	theme     *template.Template
-
-	ext  = ""
-	base = ""
 )
 
 const (
@@ -62,7 +56,6 @@ func init() {
 	flag.BoolVar(&redo, "r", false, "-r [true]")
 	flag.StringVar(&filename, "f", "README.md", "-f readme.md")
 	flag.StringVar(&targetDir, "d", "./", "-d ./static")
-	flag.StringVar(&ext, "e", "mdf", "-e static")
 
 	// theme
 	// thm_b := readFile(thm_file)
@@ -72,21 +65,16 @@ func init() {
 	if goutils.CheckErr(err) {
 		panic(err.Error())
 	}
-
-	base, _ = os.Getwd()
 }
 
 func main() {
 	flag.Parse()
-	base += string(os.PathSeparator) + ext
 
 	if renderFile(filename, redo) {
 		fmt.Printf("Successfully parsed %s ==> %s.html\n", filename, filename)
 	} else {
 		fmt.Printf("Failed to parse %s ==> %s.html\n", filename, filename)
 	}
-	fmt.Println(ext)
-	ExtractFiles(ext)
 }
 
 func renderFile(filename string, redo bool) bool {
@@ -132,39 +120,4 @@ func readFile(filename string) []byte {
 		return nil
 	}
 	return b
-}
-
-func WalkFunc(path string, info os.FileInfo, err error) error {
-	if strings.EqualFold(".git", info.Name()) {
-		return filepath.SkipDir
-	}
-	if strings.Contains(path, ext) {
-		return filepath.SkipDir
-	}
-	if info.IsDir() {
-		err = os.Mkdir(base+string(os.PathSeparator)+path, 0644)
-		if goutils.CheckErr(err) {
-			return nil
-		}
-	}
-
-	if strings.EqualFold(".md", filepath.Ext(path)) {
-		orf, err := os.OpenFile(path, os.O_RDONLY, 0644)
-		defer orf.Close()
-		if goutils.CheckErr(err) {
-			return nil
-		}
-		owf, err := os.OpenFile(base+string(os.PathSeparator)+path, os.O_CREATE|os.O_WRONLY, 0622)
-		defer owf.Close()
-		if goutils.CheckErr(err) {
-			return nil
-		}
-		n, err := io.Copy(owf, orf)
-		fmt.Printf("n:%d,err:%v\n", n, err)
-	}
-	return nil
-}
-
-func ExtractFiles(base string) {
-	filepath.Walk("./", WalkFunc)
 }
