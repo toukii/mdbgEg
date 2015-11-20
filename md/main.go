@@ -3,12 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strings"
 	// "github.com/microcosm-cc/bluemonday"
 	// "github.com/russross/blackfriday"
 	"github.com/shaalx/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
+	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
@@ -17,6 +20,9 @@ var (
 	targetDir = ""
 	redo      = false
 	theme     *template.Template
+
+	ext  = ""
+	base = ""
 )
 
 const (
@@ -37,8 +43,8 @@ const (
 			<nav class="navbar navbar-default" role="navigation" id="navbar">
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav" id="menu">
-						<li><a href="http://mdblog.daoapp.io/">Home</a></li>
-						<li><a href="http://mdblog.daoapp.io/">Go</a></li>
+						<li><a href="/">Home</a></li>
+						<li><a href="/callback">callback</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -56,6 +62,7 @@ func init() {
 	flag.BoolVar(&redo, "r", false, "-r [true]")
 	flag.StringVar(&filename, "f", "README.md", "-f readme.md")
 	flag.StringVar(&targetDir, "d", "./", "-d ./static")
+	flag.StringVar(&ext, "e", "./", "-e ./static")
 
 	// theme
 	// thm_b := readFile(thm_file)
@@ -65,6 +72,9 @@ func init() {
 	if goutils.CheckErr(err) {
 		panic(err.Error())
 	}
+
+	base, _ = os.Getwd()
+	base += string(os.PathSeparator) + "mdf" + string(os.PathSeparator)
 }
 
 func main() {
@@ -74,6 +84,7 @@ func main() {
 	} else {
 		fmt.Printf("Failed to parse %s ==> %s.html\n", filename, filename)
 	}
+	ExtractFiles("./", "target", ".md")
 }
 
 func renderFile(filename string, redo bool) bool {
@@ -119,4 +130,38 @@ func readFile(filename string) []byte {
 		return nil
 	}
 	return b
+}
+
+func WalkFunc(path string, info os.FileInfo, err error) error {
+	if strings.EqualFold(".git", info.Name()) {
+		return filepath.SkipDir
+	}
+	fmt.Printf("path:%s\n", path)
+	// fmt.Printf("info:%v\n", info)
+	// fmt.Printf("err:%e\n", err)
+	if strings.EqualFold(".md", filepath.Ext(path)) {
+		orf, err := os.OpenFile(path, os.O_RDONLY, 0644)
+		defer orf.Close()
+		if goutils.CheckErr(err) {
+			return nil
+		}
+		fmt.Printf("target:%s\n", base+string(os.PathSeparator)+path)
+		os.Create(base + string(os.PathSeparator) + path)
+		owf, err := os.OpenFile(base+string(os.PathSeparator)+path, os.O_CREATE|os.O_WRONLY, 0622)
+		defer owf.Close()
+		if goutils.CheckErr(err) {
+			return nil
+		}
+		n, err := io.Copy(owf, orf)
+		fmt.Printf("n:%d,err:%v\n", n, err)
+	}
+	return nil
+}
+
+func ExtractFiles(base, target, ext string) {
+	// fi, err := os.Lstat(target)
+	// if goutils.CheckErr(err) {
+	// 	return
+	// }
+	filepath.Walk("./", WalkFunc)
 }
