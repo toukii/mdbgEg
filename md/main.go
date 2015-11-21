@@ -30,6 +30,7 @@ const (
 	<title>{{.Title}}</title>
 	<link href="/favicon.png" rel="icon">
 
+	<link href="http://7xku3c.com1.z0.glb.clouddn.com/style.css" rel="stylesheet">
 
 	<link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -68,6 +69,34 @@ const (
 				</div>
 			  </div>
 
+<div class="panel panel-default">
+	<div class="panel-heading">
+	  <h3 class="panel-title">社区状态</h3>
+	</div>
+	<table width="100%" class="status">
+	  <thead>
+		<tr>
+		  <th>&nbsp;</th>
+		  <th></th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<tr>
+		  <td class="status-label">注册会员</td>
+		  <td class="value">4558</td>
+		</tr>
+		<tr>
+		  <td class="status-label">主题</td>
+		  <td class="value">3034</td>
+		</tr>
+		<tr>
+		  <td class="status-label">回复</td>
+		  <td class="value">9826</td>
+		</tr>
+	  </tbody>
+	</table>
+  </div>
+
 			<div class="col-md-12">
 			<footer class="footer">
 				<div class="row footer-bottom">
@@ -93,10 +122,10 @@ func init() {
 	flag.StringVar(&targetDir, "d", "./", "-d ./static")
 
 	// theme
-	thm_b := readFile(thm_file)
-	if nil == thm_b {
-		thm_b = goutils.ToByte(thm_s)
-	}
+	// thm_b := readFile(thm_file)
+	// if nil == thm_b {
+	thm_b := goutils.ToByte(thm_s)
+	// }
 	var err error
 	theme, err = template.New("theme.thm").Parse(goutils.ToString(thm_b))
 	if goutils.CheckErr(err) {
