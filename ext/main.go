@@ -15,7 +15,7 @@ var (
 	from  = "./" // extration files in from
 	home  = ""   // home path == pwd + Spor + base
 	base  = ""   // base path
-	ext   = ".md"
+	ext   = ".html"
 	force = false
 )
 
@@ -23,7 +23,7 @@ func init() {
 	_home, _ := os.Getwd()
 	// flag.StringVar(&from, "from", "./", "-from MDFs")
 	flag.StringVar(&base, "base", "MDFs", "-base mdfs")
-	flag.StringVar(&ext, "ext", ".md", "-ext .go")
+	flag.StringVar(&ext, "ext", ".html", "-ext .md")
 	flag.BoolVar(&force, "f", false, "-f [true] force")
 	flag.Parse()
 	home = _home + Spor + base

@@ -9,6 +9,7 @@ import (
 	"github.com/shaalx/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
 	"os"
+	"strings"
 	"text/template"
 )
 
@@ -17,6 +18,7 @@ var (
 	targetDir = ""
 	redo      = false
 	theme     *template.Template
+	Spor      = ""
 )
 
 const (
@@ -52,6 +54,7 @@ const (
 )
 
 func init() {
+	Spor = string(os.PathSeparator)
 	// flag
 	flag.BoolVar(&redo, "r", false, "-r [true]")
 	flag.StringVar(&filename, "f", "README.md", "-f readme.md")
@@ -78,7 +81,7 @@ func main() {
 }
 
 func renderFile(filename string, redo bool) bool {
-	_, err := os.Stat(filename + ".html")
+	_, err := os.Lstat(filename + ".html")
 	if !redo && nil == err {
 		return false
 	}
@@ -96,8 +99,9 @@ func renderFile(filename string, redo bool) bool {
 
 	data := make(map[string]interface{})
 	data["MDContent"] = goutils.ToString(html)
-	data["Title"] = filename
-	of, err := os.OpenFile(targetDir+string(os.PathSeparator)+filename+".html", os.O_CREATE|os.O_RDWR, 0666)
+
+	data["Title"] = getName(filename)
+	of, err := os.OpenFile( /*targetDir+string(os.PathSeparator)+*/ filename+".html", os.O_CREATE|os.O_RDWR, 0666)
 	defer of.Close()
 	if goutils.CheckErr(err) {
 		return false
@@ -107,6 +111,11 @@ func renderFile(filename string, redo bool) bool {
 		return false
 	}
 	return true
+}
+
+func getName(filename string) string {
+	sps := strings.Split(filename, Spor)
+	return sps[len(sps)-1]
 }
 
 func readFile(filename string) []byte {
