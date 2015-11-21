@@ -38,12 +38,13 @@ func NewInfo(dir string, ok bool, info string) *Info {
 var (
 	command     *exc.CMD
 	installInfo chan *Info
+	wd          = ""
 )
 
 func init() {
 	installInfo = make(chan *Info, 50)
 	command = exc.NewCMD("go version").Debug()
-
+	wd, _ = os.Getwd()
 }
 
 func searchDir(dir string) {
@@ -68,6 +69,9 @@ func searchDir(dir string) {
 			cmd := fmt.Sprintf("md -r -f %s", absName)
 			b, err := command.Cd(dir).Reset(cmd).Do()
 			// b, err := command.Cd(dir).Do()
+			subName := absName[len(wd):]
+			cmd = fmt.Sprintf("mv %s.html %s", absName, filepath.Join(wd, "MDFs", subName))
+			command.Reset(cmd).Execute()
 			if nil != err {
 				installInfo <- NewInfo(dir, false, goutils.ToString(b))
 			} else {
