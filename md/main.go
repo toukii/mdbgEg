@@ -29,6 +29,8 @@ const (
 	<meta charset="utf-8">
 	<title>{{.Title}}</title>
 	<link href="/favicon.png" rel="icon">
+
+
 	<link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="http://static.bootcss.com/www/assets/css/site.min.css?v5" rel="stylesheet">
@@ -47,17 +49,37 @@ const (
 		</div>
 
 		<div class="container">
-			{{.MDContent}}
-			<footer class="footer ">
+            <div class="col-md-8">			
+				<div class="content">
+					{{.MDContent}}
+				</div>
+			</div>
+
+			<div class="col-md-4 sidebar">
+			  <div class="panel panel-default">
+				<div class="panel-body">
+				  <h4><small>致力于打造一个国内Gophers交流和分享的地方</small></h4>
+				  <hr>
+				  <div align="center">
+					<a href="/signup" class="btn btn-info">注册</a>
+				  </div>
+				  <div class="cleanfix"></div>
+				  <div align="center">已注册用户：<a href="/signin">登录</a></div>
+				</div>
+			  </div>
+
+			<div class="col-md-12">
+			<footer class="footer">
 				<div class="row footer-bottom">
 					<ul class="list-inline text-center">
 						<div class="copy-right" style="color:#4d5152">
-							<h4> ©2015 all rights reserved </h4>
+							<h4> ©2015 shaalx </h4>
 						</div>
 					</ul>
 				</div>
 			</footer>
-
+			</div>
+			
 		</div>
 	</body>
 </html>`
