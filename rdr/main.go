@@ -70,7 +70,11 @@ func searchDir(dir string) {
 			b, err := command.Cd(dir).Reset(cmd).Do()
 			// b, err := command.Cd(dir).Do()
 			subName := absName[len(wd):]
-			cmd = fmt.Sprintf("mv %s.html %s.html", absName, filepath.Join(wd, "MDFs", subName))
+			target := filepath.Join(wd, "MDFs", subName)
+			target_dir := filepath.Dir(target)
+			cmd = fmt.Sprintf("mkdir -p %s", target_dir)
+			command.Reset(cmd).Execute()
+			cmd = fmt.Sprintf("mv %s.html %s.html", absName, target)
 			command.Reset(cmd).Execute()
 			if nil != err {
 				installInfo <- NewInfo(dir, false, goutils.ToString(b))
