@@ -40,6 +40,7 @@ const (
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav" id="menu">
 						<li><a href="/README.md.html">Home</a></li>
+						<li><a href="/Go/README.md.html">Go</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -47,6 +48,15 @@ const (
 
 		<div class="container">
 			{{.MDContent}}
+			<footer class="footer ">
+				<div class="row footer-bottom">
+					<ul class="list-inline text-center">
+						<div class="copy-right" style="color:#4d5152">
+							<h4> ©2015 all rights reserved </h4>
+						</div>
+					</ul>
+				</div>
+			</footer>
 		</div>
 	</body>
 </html>`
