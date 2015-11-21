@@ -65,7 +65,6 @@ func searchDir(dir string) {
 		}
 		if strings.HasSuffix(it.Name(), ".md") {
 			absName := filepath.Join(dir, it.Name())
-			fmt.Println(absName)
 			cmd := fmt.Sprintf("md -r -f %s", absName)
 			b, err := command.Cd(dir).Reset(cmd).Do()
 			// b, err := command.Cd(dir).Do()
