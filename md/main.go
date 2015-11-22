@@ -30,7 +30,7 @@ const (
 	<title>{{.Title}}</title>
 	<link href="/favicon.png" rel="icon">
 
-	<link href="http://7xku3c.com1.z0.glb.clouddn.com/style.css" rel="stylesheet">
+	<link href="http://7xku3c.com1.z0.glb.clouddn.com/md_style.css" rel="stylesheet">
 
 	<link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
