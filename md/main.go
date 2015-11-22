@@ -59,19 +59,19 @@ const (
 			<div class="col-md-4 sidebar">
 			  <div class="panel panel-default">
 				<div class="panel-body">
-				  <h4><small>致力于打造一个国内Gophers交流和分享的地方</small></h4>
+				  <h4><small>Markdown Blog</small></h4>
 				  <hr>
 				  <div align="center">
-					<a href="/signup" class="btn btn-info">注册</a>
+					<a href="http://bookmark.daoapp.io/" class="btn btn-info">书签</a>
 				  </div>
 				  <div class="cleanfix"></div>
-				  <div align="center">已注册用户：<a href="/signin">登录</a></div>
+				  <div align="center">在线测评：<a href="http://gooj-shaalx.myalauda.cn/">START!</a></div>
 				</div>
 			  </div>
 
 <div class="panel panel-default">
 	<div class="panel-heading">
-	  <h3 class="panel-title">社区状态</h3>
+	  <h3 class="panel-title">状态</h3>
 	</div>
 	<table width="100%" class="status">
 	  <thead>
@@ -82,16 +82,16 @@ const (
 	  </thead>
 	  <tbody>
 		<tr>
-		  <td class="status-label">注册会员</td>
-		  <td class="value">4558</td>
+		  <td class="status-label">Go</td>
+		  <td class="value">4</td>
 		</tr>
 		<tr>
-		  <td class="status-label">主题</td>
-		  <td class="value">3034</td>
+		  <td class="status-label">Java</td>
+		  <td class="value">0</td>
 		</tr>
 		<tr>
-		  <td class="status-label">回复</td>
-		  <td class="value">9826</td>
+		  <td class="status-label">Others</td>
+		  <td class="value">0</td>
 		</tr>
 	  </tbody>
 	</table>
