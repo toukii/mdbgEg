@@ -67,9 +67,9 @@ func searchDir(dir string) {
 			absName := filepath.Join(dir, it.Name())
 			cmd := fmt.Sprintf("md -r -f %s", absName)
 			b, err := command.Cd(dir).Reset(cmd).Do()
-			// b, err := command.Cd(dir).Do()
+
 			subName := absName[len(wd):]
-			target := filepath.Join(wd, "MDFs", subName)
+			target := filepath.Join(wd, "MDFs", subName[:len(subName)-3])
 			target_dir := filepath.Dir(target)
 			cmd = fmt.Sprintf("mkdir -p %s", target_dir)
 			command.Reset(cmd).Execute()
