@@ -55,18 +55,19 @@ const (
 				<div class="content">
 					{{.MDContent}}
 				</div>
-			</div>
+		</div>
 
 			<div class="col-md-4 sidebar">
 			  <div class="panel panel-default">
 				<div class="panel-body">
-				  <h4><small>Markdown Blog</small></h4>
-				  <hr>
-				  <div align="center">
-					<a href="http://bookmark.daoapp.io/" class="btn btn-info">书签</a>
+				  <div align="left">
+				  	<h4><small>学习链接</small></h4>
 				  </div>
-				  <div class="cleanfix"></div>
-				  <div align="center">在线测评：<a href="http://gooj-shaalx.myalauda.cn/">START!</a></div>
+				  <hr>					
+					<strong><a href="https://gowalker.org/" title="gowalker" rel="nofollow">gowalker</a></strong> 
+					<strong><a href="https://godoc.org/" title="godoc" rel="nofollow">godoc</a></strong> 
+					<strong><a href="https://gopm.io/" title="gopm" rel="nofollow">gopm</a></strong> 
+					<strong><a href="http://stdlib-shaalx.myalauda.cn/" title="stdlib" rel="nofollow">gostd</a></strong>
 				</div>
 			  </div>
 
@@ -98,18 +99,18 @@ const (
 	</table>
   </div>
 
-			<div class="col-md-12">
-			<footer class="footer">
-				<div class="row footer-bottom">
-					<ul class="list-inline text-center">
-						<div class="copy-right" style="color:#4d5152">
-							<h4> ©2015 shaalx </h4>
-						</div>
-					</ul>
-				</div>
-			</footer>
+		</div>
+
+		<div class="col-md-12">
+		<footer class="footer">
+			<div class="row footer-bottom">
+				<ul class="list-inline text-center">
+					<div class="copy-right" style="color:#4d5152">
+						<h6><small> ©2015 shaalx </small></h6>
+					</div>
+				</ul>
 			</div>
-			
+		</footer>
 		</div>
 	</body>
 </html>`
