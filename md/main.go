@@ -42,8 +42,8 @@ const (
 			<nav class="navbar navbar-default" role="navigation" id="navbar">
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav" id="menu">
-						<li><a href="/README.md.html">Home</a></li>
-						<li><a href="/Go/README.md.html">Go</a></li>
+						<li><a href="/">Home</a></li>
+						<li><a href="/Go">Go</a></li>
 					</ul>
 				</div>
 			</nav>
