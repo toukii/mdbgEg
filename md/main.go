@@ -28,8 +28,7 @@ const (
 <head>
 	<meta charset="utf-8">
 	<title>{{.Title}}</title>
-	<link href="/favicon.png" rel="icon">
-
+	<link rel="shortcut icon" href="http://7xku3c.com1.z0.glb.clouddn.com/China.ico" type="image/x-icon">
 	<link href="http://7xku3c.com1.z0.glb.clouddn.com/md_style.css" rel="stylesheet">
 
 	<link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
