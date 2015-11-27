@@ -43,6 +43,7 @@ const (
 					<ul class="nav navbar-nav" id="menu">
 						<li><a href="/">Home</a></li>
 						<li><a href="/Go">Go</a></li>
+						<li><a href="/Linux">Linux</a></li>
 						<li><a href="/Item">Item</a></li>
 					</ul>
 				</div>
