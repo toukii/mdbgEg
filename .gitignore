@@ -1,3 +1,8 @@
+*.tmp
+mdbgEg
+/ext/ext
+/md/md
+/rdr/rdr
 *.exe
 *.html
 *.md.html
