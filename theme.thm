@@ -17,9 +17,6 @@
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav" id="menu">
 						<li><a href="/">Home</a></li>
-						<li><a href="/Go">Go</a></li>
-						<li><a href="/Linux">Linux</a></li>
-						<li><a href="/Item">Item</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -60,15 +57,15 @@
 	  <tbody>
 		<tr>
 		  <td class="status-label">Go</td>
-		  <td class="value">4</td>
+		  <td class="value">0</td>
 		</tr>
 		<tr>
 		  <td class="status-label">Item</td>
-		  <td class="value">3</td>
+		  <td class="value">0</td>
 		</tr>
 		<tr>
 		  <td class="status-label">Linux</td>
-		  <td class="value">4</td>
+		  <td class="value">0</td>
 		</tr>
 	  </tbody>
 	</table>
