@@ -124,10 +124,10 @@ func init() {
 	flag.StringVar(&targetDir, "d", "./", "-d ./static")
 
 	// theme
-	// thm_b := readFile(thm_file)
-	// if nil == thm_b {
-	thm_b := goutils.ToByte(thm_s)
-	// }
+	thm_b := readFile(thm_file)
+	if nil == thm_b {
+		thm_b = goutils.ToByte(thm_s)
+	}
 	var err error
 	theme, err = template.New("theme.thm").Parse(goutils.ToString(thm_b))
 	if goutils.CheckErr(err) {

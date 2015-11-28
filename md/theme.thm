@@ -3,9 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<title>{{.Title}}</title>
-	<link href="/favicon.png" rel="icon">
-
-	<link href="http://7xku3c.com1.z0.glb.clouddn.com/style.css" rel="stylesheet">
+	<link rel="shortcut icon" href="http://7xku3c.com1.z0.glb.clouddn.com/China.ico" type="image/x-icon">
+	<link href="http://7xku3c.com1.z0.glb.clouddn.com/md_style.css" rel="stylesheet">
 
 	<link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -17,8 +16,10 @@
 			<nav class="navbar navbar-default" role="navigation" id="navbar">
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav" id="menu">
-						<li><a href="/README.md.html">Home</a></li>
-						<li><a href="/Go/README.md.html">Go</a></li>
+						<li><a href="/">Home</a></li>
+						<li><a href="/Go">Go</a></li>
+						<li><a href="/Linux">Linux</a></li>
+						<li><a href="/Item">Item</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -29,18 +30,19 @@
 				<div class="content">
 					{{.MDContent}}
 				</div>
-			</div>
+		</div>
 
 			<div class="col-md-4 sidebar">
 			  <div class="panel panel-default">
 				<div class="panel-body">
-				  <h4><small>Markdown Blog</small></h4>
-				  <hr>
-				  <div align="center">
-					<a href="http://bookmark.daoapp.io/" class="btn btn-info">书签</a>
+				  <div align="left">
+				  	<h4><small>学习链接</small></h4>
 				  </div>
-				  <div class="cleanfix"></div>
-				  <div align="center">在线测评：<a href="http://gooj-shaalx.myalauda.cn/">START!</a></div>
+				  <hr>					
+					<strong><a href="https://gowalker.org/" title="gowalker" rel="nofollow">gowalker</a></strong> 
+					<strong><a href="https://godoc.org/" title="godoc" rel="nofollow">godoc</a></strong> 
+					<strong><a href="https://gopm.io/" title="gopm" rel="nofollow">gopm</a></strong> 
+					<strong><a href="http://stdlib-shaalx.myalauda.cn/" title="stdlib" rel="nofollow">gostd</a></strong>
 				</div>
 			  </div>
 
@@ -72,18 +74,18 @@
 	</table>
   </div>
 
-			<div class="col-md-12">
-			<footer class="footer">
-				<div class="row footer-bottom">
-					<ul class="list-inline text-center">
-						<div class="copy-right" style="color:#4d5152">
-							<h4> ©2015 shaalx </h4>
-						</div>
-					</ul>
-				</div>
-			</footer>
+		</div>
+
+		<div class="col-md-12">
+		<footer class="footer">
+			<div class="row footer-bottom">
+				<ul class="list-inline text-center">
+					<div class="copy-right" style="color:#4d5152">
+						<h6><small> ©2015 shaalx </small></h6>
+					</div>
+				</ul>
 			</div>
-			
+		</footer>
 		</div>
 	</body>
 </html>
