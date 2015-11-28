@@ -14,10 +14,14 @@ import (
 	"github.com/everfore/rpcsv"
 	"github.com/everfore/rpcsv/clt"
 	"github.com/shaalx/goutils"
+	"net"
 	"net/rpc"
 )
 
 func main() {
+	defer rpc_client.Close()
+	defer lis.Close()
+	walkRPCRdr()
 	http.HandleFunc("/callback", callback)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
 	http.ListenAndServe(":80", nil)
@@ -26,10 +30,12 @@ func main() {
 var (
 	exc_cmd    *exc.CMD
 	rpc_client *rpc.Client
+	lis        net.Listener
 )
 
 func init() {
-	if err := rpcsv.RPCServe("88"); err != nil {
+	var err error
+	if lis, err = rpcsv.RPCServe("88"); err != nil {
 		return
 	}
 	exc_cmd = exc.NewCMD("ls").Debug()
@@ -94,15 +100,41 @@ func removeMD(file_in, dir_out string) {
 // in: Linux/index.md
 // out: ./MDFs
 func modifiedMD(file_in, dir_out string) {
-	finfo, _ := os.Stat(file_in)
+	finfo, err := os.Stat(file_in)
+	if goutils.CheckErr(err) {
+		return
+	}
 	filename := finfo.Name()
 	dir := filepath.Dir(file_in)
 	fs := strings.Split(filename, ".")
 	in := goutils.ReadFile(file_in)
 	out := make([]byte, 1)
-	err := clt.Markdown(rpc_client, &in, &out)
+	err = clt.Markdown(rpc_client, &in, &out)
 	if goutils.CheckErr(err) {
 		return
 	}
+	target := fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0]))
+	fmt.Println(file_in, " ==> ", target)
 	goutils.WriteFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), out)
+}
+
+// base: ./
+// target: ./MDFs
+func walkRPCRdr() {
+	filepath.Walk("./", walkCond)
+}
+
+var (
+	abs, _ = filepath.Abs("./MDFs")
+)
+
+func walkCond(path string, info os.FileInfo, err error) error {
+	if strings.EqualFold(info.Name(), ".git") || strings.EqualFold(info.Name(), "./MDFs") {
+		return filepath.SkipDir
+	}
+	if info.IsDir() || !strings.HasSuffix(info.Name(), ".md") {
+		return nil
+	}
+	modifiedMD(path, abs)
+	return nil
 }
