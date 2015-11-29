@@ -68,6 +68,11 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	for i, it := range ma {
 		fs := it.RawData().String()
 		fmt.Printf("modified-%d:%v\n", i, fs)
+		if strings.EqualFold(fs, "theme.thm") {
+			rpcsv.UpdataTheme()
+			walkRPCRdr()
+			return
+		}
 		if strings.HasSuffix(fs, ".md") {
 			modifiedMD(fs, "./MDFs")
 		}
