@@ -41,6 +41,7 @@ func init() {
 	exc_cmd = exc.NewCMD("ls").Debug()
 	rpc_client = clt.RPCClient("127.0.0.1:88")
 	if rpc_client == nil {
+		lis.Close()
 		panic("rpc_client is nil!")
 	}
 }
