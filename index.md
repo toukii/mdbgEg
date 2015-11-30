@@ -2,8 +2,11 @@
 
 markdown blog engine
 
-##	[EXT](ext/README.html)
+**[README](README.html)**
 
 ##	[md](md/README.html)
 
 ##	[rdr](rdr/README.html)
+
+##	[Markdown Syntax](ext/README.html)
+

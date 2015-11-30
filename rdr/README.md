@@ -1,7 +1,10 @@
-#	Index
+#	rdr
 
-[a](a/a.md.html)
+**render Markdown**
 
-[b](b/b.md.html)
+_usage_
 
-[c](c/c.md.html)
+>rdr
+
+all render files will be put in _/MDFs/_.
+
