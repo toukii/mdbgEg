@@ -24,10 +24,19 @@
 
 		<div class="container">
             <div class="col-md-8">			
-				<div class="content">
-					{{.MDContent}}
-				</div>
-		</div>
+			<div class="content">
+				{{.MDContent}}
+			</div>			
+			<!--高速版-->
+			<div id="SOHUCS"></div>
+			<script charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/changyan.js" ></script>
+			<script type="text/javascript">
+			    window.changyan.api.config({
+			        appid: 'cys7ti4Nu',
+			        conf: 'prod_5e3afc2656b5c8a7a241c0a935d417b5'
+			    });
+			</script>      
+			</div>
 
 			<div class="col-md-4 sidebar">
 			  <div class="panel panel-default">
