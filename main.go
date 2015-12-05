@@ -55,7 +55,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	fmt.Printf("UserAgent:%s\n", usa)
 	if !strings.Contains(usa, "GitHub-Hookshot/") {
 		fmt.Println("CSRF Attack!")
-		http.Redirect(rw, req, "/", 302)
+		// http.Redirect(rw, req, "/", 302)
 		// return
 	}
 	hj := jsnm.ReaderFmt(req.Body)
