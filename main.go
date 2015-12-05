@@ -56,7 +56,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	if !strings.Contains(usa, "GitHub-Hookshot/") {
 		fmt.Println("CSRF Attack!")
 		http.Redirect(rw, req, "/", 302)
-		return
+		// return
 	}
 	hj := jsnm.ReaderFmt(req.Body)
 	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
