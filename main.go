@@ -59,6 +59,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 		// return
 	}
 	hj := jsnm.ReaderFmt(req.Body)
+	fmt.Println(hj.RawData().String())
 	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
 	pull := false
 	if len(ma) > 0 {
