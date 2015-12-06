@@ -53,21 +53,20 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 
 	usa := req.UserAgent()
 	fmt.Printf("UserAgent:%s\n", usa)
-	if !strings.Contains(usa, "GitHub-Hookshot/") {
+	if !strings.Contains(usa, "GitHub-Hookshot/") && !strings.Contains(usa, "Coding.net Hook") {
 		fmt.Println("CSRF Attack!")
-		// http.Redirect(rw, req, "/", 302)
-		// return
+		http.Redirect(rw, req, "/", 302)
+		return
 	}
-	hj := jsnm.ReaderFmt(req.Body)
 	// coding
-	msg := hj.Get("commits").ArrLoc(0).Get("short_message").RawData().String()
-	if strings.Contains(msg, "thm") {
+	if strings.Contains(usa, "Coding.net Hook") {
 		exc_cmd.Reset("git pull origin master:master").Execute()
 		rpcsv.UpdataTheme()
 		walkRPCRdr()
 		return
 	}
 	// coding
+	hj := jsnm.ReaderFmt(req.Body)
 	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
 	pull := false
 	if len(ma) > 0 {
