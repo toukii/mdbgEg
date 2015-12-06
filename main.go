@@ -62,6 +62,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	// coding
 	msg := hj.Get("commits").ArrLoc(0).Get("short_message").RawData().String()
 	if strings.Contains(msg, "thm") {
+		exc_cmd.Reset("git pull origin master:master").Execute()
 		rpcsv.UpdataTheme()
 		walkRPCRdr()
 		return
