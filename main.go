@@ -59,7 +59,14 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 		// return
 	}
 	hj := jsnm.ReaderFmt(req.Body)
-	fmt.Println(hj.RawData().String())
+	// coding
+	msg := hj.Get("commits").ArrLoc(0).Get("short_message").RawData().String()
+	if strings.Contains(msg, "thm") {
+		rpcsv.UpdataTheme()
+		walkRPCRdr()
+		return
+	}
+	// coding
 	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
 	pull := false
 	if len(ma) > 0 {
