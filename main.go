@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 
 	"github.com/everfore/rpcsv"
-	"github.com/everfore/rpcsv/clt"
 	"github.com/shaalx/goutils"
 	"net"
 	"net/rpc"
@@ -39,7 +38,7 @@ func init() {
 		return
 	}
 	exc_cmd = exc.NewCMD("ls").Debug()
-	rpc_client = clt.RPCClient("127.0.0.1:88")
+	rpc_client = rpcsv.RPCClient("127.0.0.1:88")
 	if rpc_client == nil {
 		lis.Close()
 		panic("rpc_client is nil!")
@@ -123,7 +122,7 @@ func modifiedMD(file_in, dir_out string) {
 	fs := strings.Split(filename, ".")
 	in := goutils.ReadFile(file_in)
 	out := make([]byte, 1)
-	err = clt.Markdown(rpc_client, &in, &out)
+	err = rpcsv.Markdown(rpc_client, &in, &out)
 	if goutils.CheckErr(err) {
 		return
 	}
