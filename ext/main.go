@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"io"
 	"os"
 	"path/filepath"

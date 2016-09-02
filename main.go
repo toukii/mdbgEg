@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/shaalx/jsnm"
+	"github.com/toukii/jsnm"
 
 	"os"
 	"path/filepath"
 
 	"github.com/everfore/rpcsv"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	"net"
 	"net/rpc"
 )

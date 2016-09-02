@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	// "github.com/microcosm-cc/bluemonday"
 	// "github.com/russross/blackfriday"
-	"github.com/shaalx/goutils"
+	"github.com/toukii/goutils"
 	md "github.com/shurcooL/github_flavored_markdown"
 	"os"
 	"strings"
@@ -67,7 +67,7 @@ const (
 					<strong><a href="https://gowalker.org/" title="gowalker" rel="nofollow">gowalker</a></strong> 
 					<strong><a href="https://godoc.org/" title="godoc" rel="nofollow">godoc</a></strong> 
 					<strong><a href="https://gopm.io/" title="gopm" rel="nofollow">gopm</a></strong> 
-					<strong><a href="http://stdlib-shaalx.myalauda.cn/" title="stdlib" rel="nofollow">gostd</a></strong>
+					<strong><a href="http://stdlib-toukii.myalauda.cn/" title="stdlib" rel="nofollow">gostd</a></strong>
 				</div>
 			  </div>
 
@@ -106,7 +106,7 @@ const (
 			<div class="row footer-bottom">
 				<ul class="list-inline text-center">
 					<div class="copy-right" style="color:#4d5152">
-						<h6><small> ©2015 shaalx </small></h6>
+						<h6><small> ©2015 toukii </small></h6>
 					</div>
 				</ul>
 			</div>
