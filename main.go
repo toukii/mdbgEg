@@ -8,18 +8,19 @@ import (
 
 	"github.com/toukii/jsnm"
 
+	"html/template"
 	"os"
 	"path/filepath"
 
 	"github.com/everfore/rpcsv"
 	"github.com/toukii/goutils"
-	"net"
+	// "net"
 	"net/rpc"
 )
 
 func main() {
 	defer rpc_client.Close()
-	defer lis.Close()
+	// defer lis.Close()
 	walkRPCRdr()
 	http.HandleFunc("/callback", callback)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
@@ -29,19 +30,25 @@ func main() {
 var (
 	exc_cmd    *exc.CMD
 	rpc_client *rpc.Client
-	lis        net.Listener
+	// lis        net.Listener
+	tpl *template.Template
 )
 
 func init() {
 	var err error
-	if lis, err = rpcsv.RPCServe("88"); err != nil {
-		return
-	}
+	// if lis, err = rpcsv.RPCServe("88"); err != nil {
+	// 	return
+	// }
 	exc_cmd = exc.NewCMD("ls").Debug()
-	rpc_client = rpcsv.RPCClient("127.0.0.1:88")
+	// rpc_client = rpcsv.RPCClient("127.0.0.1:88")
+	rpc_client = rpcsv.RPCClient("tcphub.t0.daoapp.io:61142")
 	if rpc_client == nil {
-		lis.Close()
+		// lis.Close()
 		panic("rpc_client is nil!")
+	}
+	tpl, err = template.ParseFiles("theme.thm")
+	if goutils.CheckErr(err) {
+		panic("theme error")
 	}
 }
 
@@ -126,9 +133,16 @@ func modifiedMD(file_in, dir_out string) {
 	if goutils.CheckErr(err) {
 		return
 	}
+	fmt.Println(goutils.ToString(out))
 	target := fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0]))
+
+	outfile, _ := os.OpenFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), os.O_CREATE|os.O_WRONLY, 0666)
+	dt := make(map[string]interface{})
+	dt["MDContent"] = template.HTML(goutils.ToString(out))
+	err1 := tpl.Execute(outfile, dt)
+	fmt.Println(err1)
 	fmt.Println(file_in, " ==> ", target)
-	goutils.WriteFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), out)
+	// goutils.WriteFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), out)
 }
 
 // base: ./
