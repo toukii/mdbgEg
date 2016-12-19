@@ -133,16 +133,16 @@ func modifiedMD(file_in, dir_out string) {
 	if goutils.CheckErr(err) {
 		return
 	}
-	fmt.Println(goutils.ToString(out))
+	// fmt.Println(goutils.ToString(out))
 	target := fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0]))
 
+	goutils.Mkdir(fmt.Sprintf("%s", filepath.Join(dir_out, dir)))
 	outfile, _ := os.OpenFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), os.O_CREATE|os.O_WRONLY, 0666)
+	defer outfile.Close()
 	dt := make(map[string]interface{})
 	dt["MDContent"] = template.HTML(goutils.ToString(out))
-	err1 := tpl.Execute(outfile, dt)
-	fmt.Println(err1)
+	tpl.Execute(outfile, dt)
 	fmt.Println(file_in, " ==> ", target)
-	// goutils.WriteFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), out)
 }
 
 // base: ./
