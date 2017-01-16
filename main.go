@@ -23,6 +23,7 @@ func main() {
 	// defer lis.Close()
 	walkRPCRdr()
 	http.HandleFunc("/callback", callback)
+	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
 	http.ListenAndServe(":80", nil)
 }
@@ -52,6 +53,13 @@ func init() {
 	}
 }
 
+func update(rw http.ResponseWriter, req * http.Request)  {
+	tpl, err = template.ParseFiles("theme.thm")
+	if goutils.CheckErr(err) {
+		panic("theme error")
+	}
+	walkRPCRdr()
+}
 // Webhooks callback
 func callback(rw http.ResponseWriter, req *http.Request) {
 	fmt.Printf("Refer:%s\n", req.Referer())
