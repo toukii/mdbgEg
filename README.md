@@ -1,4 +1,4 @@
-#	[mdbgEg](https://github.com/shaalx/mdbgEg)
+#	[mdbgEg](https://github.com/toukii/mdbgEg)
 
 **markdown blog engine for github**
 
@@ -6,7 +6,7 @@
 
 >	USAGE
 
->>	go get github.com/shaalx/mdbgEg
+>>	go get github.com/toukii/mdbgEg
 
 >>	$GOPATH/bin/mdbgEg
 
@@ -27,7 +27,7 @@
 
 >		RUN git clone --depth 1 git://github.com/**user/repo**.git .
 
->		RUN go get -u github.com/shaalx/mdbgEg
+>		RUN go get -u github.com/toukii/mdbgEg
 >		RUN mv $GOPATH/bin/mdbgEg /bin/mdbgEg
 
 >		EXPOSE 80
