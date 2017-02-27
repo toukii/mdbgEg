@@ -54,7 +54,7 @@ func init() {
 }
 
 func update(rw http.ResponseWriter, req * http.Request)  {
-	tpl, err = template.ParseFiles("theme.thm")
+	_, err := template.ParseFiles("theme.thm")
 	if goutils.CheckErr(err) {
 		panic("theme error")
 	}
