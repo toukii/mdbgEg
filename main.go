@@ -25,7 +25,7 @@ func main() {
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8080", nil)
 }
 
 var (
@@ -54,11 +54,12 @@ func init() {
 }
 
 func update(rw http.ResponseWriter, req * http.Request)  {
-	var err error
-	tpl, err = template.ParseFiles("theme.thm")
+	fmt.Println("update")
+	tpl1, err := template.ParseFiles("theme.thm")
 	if goutils.CheckErr(err) {
 		panic("theme error")
 	}
+	tpl = tpl1
 	walkRPCRdr()
 }
 // Webhooks callback
