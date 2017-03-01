@@ -25,7 +25,7 @@ func main() {
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":80", nil)
 }
 
 var (
