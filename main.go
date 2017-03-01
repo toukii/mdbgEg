@@ -25,7 +25,7 @@ func main() {
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8080", nil)
 }
 
 var (
@@ -49,19 +49,32 @@ func init() {
 	}
 	tpl, err = template.ParseFiles("theme.thm")
 	if goutils.CheckErr(err) {
-		panic("theme error")
+		tpl = defaultTheme()
 	}
 }
 
+func defaultTheme() *template.Template{
+	dtpl,err:=template.New("default").Parse("{{.MDContent}}")
+	if goutils.CheckErr(err) {
+		panic(err)
+	}
+	return dtpl
+}
+
 func update(rw http.ResponseWriter, req * http.Request)  {
+	updateTheme()
+}
+
+func updateTheme()  {
 	fmt.Println("update")
 	tpl1, err := template.ParseFiles("theme.thm")
 	if goutils.CheckErr(err) {
-		panic("theme error")
+		return
 	}
 	tpl = tpl1
 	walkRPCRdr()
 }
+
 // Webhooks callback
 func callback(rw http.ResponseWriter, req *http.Request) {
 	fmt.Printf("Refer:%s\n", req.Referer())
@@ -78,7 +91,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	if strings.Contains(usa, "Coding.net Hook") {
 		exc_cmd.Reset("git pull origin master:master").Execute()
 		rpcsv.UpdataTheme()
-		walkRPCRdr()
+		updateTheme()
 		return
 	}
 	// coding
@@ -94,7 +107,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 		fmt.Printf("modified-%d:%v\n", i, fs)
 		if strings.EqualFold(fs, "theme.thm") {
 			rpcsv.UpdataTheme()
-			walkRPCRdr()
+			updateTheme()
 			return
 		}
 		if strings.HasSuffix(fs, ".md") {
