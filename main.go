@@ -110,6 +110,9 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 			updateTheme()
 			return
 		}
+		if strings.HasSuffix(fs, ".html") {
+			goutils.WriteFile(filepath.Join("./MDFs",fs),goutils.ReadFile(fs))
+		}
 		if strings.HasSuffix(fs, ".md") {
 			modifiedMD(fs, "./MDFs")
 		}
@@ -166,6 +169,10 @@ func modifiedMD(file_in, dir_out string) {
 	dt["MDContent"] = template.HTML(goutils.ToString(out))
 	tpl.Execute(outfile, dt)
 	fmt.Println(file_in, " ==> ", target)
+}
+
+func copyFile(file_in, dir_out string)  {
+	goutils.WriteFile(filepath.Join(dir_out,file_in),goutils.ReadFile(file_in))
 }
 
 // base: ./
