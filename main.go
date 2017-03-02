@@ -100,7 +100,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
 	pull := false
 	if len(ma) > 0 {
-		//exc_cmd.Reset("git pull origin master:master").Execute()
+		exc_cmd.Reset("git pull origin master:master").Execute()
 		pull = true
 	}
 	for i, it := range ma {
