@@ -22,6 +22,7 @@ func main() {
 	defer rpc_client.Close()
 	// defer lis.Close()
 	walkRPCRdr()
+	copyFile("index.html","./MDFs")
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
@@ -82,11 +83,11 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 
 	usa := req.UserAgent()
 	fmt.Printf("UserAgent:%s\n", usa)
-	if !strings.Contains(usa, "GitHub-Hookshot/") && !strings.Contains(usa, "Coding.net Hook") {
-		fmt.Println("CSRF Attack!")
-		http.Redirect(rw, req, "/", 302)
-		return
-	}
+	/*if !strings.Contains(usa, "GitHub-Hookshot/") && !strings.Contains(usa, "Coding.net Hook") {*/
+	/*	fmt.Println("CSRF Attack!")*/
+	/*	http.Redirect(rw, req, "/", 302)*/
+	/*	return*/
+	/*}*/
 	// coding
 	if strings.Contains(usa, "Coding.net Hook") {
 		exc_cmd.Reset("git pull origin master:master").Execute()
@@ -99,7 +100,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
 	pull := false
 	if len(ma) > 0 {
-		exc_cmd.Reset("git pull origin master:master").Execute()
+		//exc_cmd.Reset("git pull origin master:master").Execute()
 		pull = true
 	}
 	for i, it := range ma {
