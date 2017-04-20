@@ -22,7 +22,7 @@ func main() {
 	defer rpc_client.Close()
 	// defer lis.Close()
 	walkRPCRdr()
-	copyFile("index.html","./MDFs")
+	copyFile("index.html", "./MDFs")
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
@@ -54,19 +54,19 @@ func init() {
 	}
 }
 
-func defaultTheme() *template.Template{
-	dtpl,err:=template.New("default").Parse("{{.MDContent}}")
+func defaultTheme() *template.Template {
+	dtpl, err := template.New("default").Parse("{{.MDContent}}")
 	if goutils.CheckErr(err) {
 		panic(err)
 	}
 	return dtpl
 }
 
-func update(rw http.ResponseWriter, req * http.Request)  {
+func update(rw http.ResponseWriter, req *http.Request) {
 	updateTheme()
 }
 
-func updateTheme()  {
+func updateTheme() {
 	fmt.Println("update")
 	tpl1, err := template.ParseFiles("theme.thm")
 	if goutils.CheckErr(err) {
@@ -82,7 +82,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	fmt.Printf("req:%#v\n", req)
 
 	usa := req.UserAgent()
-	fmt.Printf("UserAgent:%s\n", usa)
+	// fmt.Printf("UserAgent:%s\n", usa)
 	/*if !strings.Contains(usa, "GitHub-Hookshot/") && !strings.Contains(usa, "Coding.net Hook") {*/
 	/*	fmt.Println("CSRF Attack!")*/
 	/*	http.Redirect(rw, req, "/", 302)*/
@@ -97,7 +97,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 	}
 	// coding
 	hj := jsnm.ReaderFmt(req.Body)
-	ma := hj.Get("commits").ArrLoc(0).Get("modified").Arr()
+	ma := hj.ArrGet("commits", "0", "modified").Arr()
 	pull := false
 	if len(ma) > 0 {
 		exc_cmd.Reset("git pull origin master:master").Execute()
@@ -112,13 +112,13 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 			return
 		}
 		if strings.HasSuffix(fs, ".html") {
-			goutils.WriteFile(filepath.Join("./MDFs",fs),goutils.ReadFile(fs))
+			goutils.WriteFile(filepath.Join("./MDFs", fs), goutils.ReadFile(fs))
 		}
 		if strings.HasSuffix(fs, ".md") {
 			modifiedMD(fs, "./MDFs")
 		}
 	}
-	aa := hj.Get("commits").ArrLoc(0).Get("added").Arr()
+	aa := hj.ArrGet("commits", "0", "added").Arr()
 	if aa != nil && !pull {
 		exc_cmd.Reset("git pull origin master:master").Execute()
 	}
@@ -129,7 +129,10 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 			modifiedMD(fs, "./MDFs")
 		}
 	}
-	ra := hj.Get("commits").ArrLoc(0).Get("removed").Arr()
+	ra := hj.ArrGet("commits", "0", "removed").Arr()
+	if ra != nil && !pull {
+		exc_cmd.Reset("git pull origin master:master").Execute()
+	}
 	for i, it := range ra {
 		fs := it.RawData().String()
 		fmt.Printf("removed-%d:%v\n", i, fs)
@@ -172,8 +175,8 @@ func modifiedMD(file_in, dir_out string) {
 	fmt.Println(file_in, " ==> ", target)
 }
 
-func copyFile(file_in, dir_out string)  {
-	goutils.WriteFile(filepath.Join(dir_out,file_in),goutils.ReadFile(file_in))
+func copyFile(file_in, dir_out string) {
+	goutils.WriteFile(filepath.Join(dir_out, file_in), goutils.ReadFile(file_in))
 }
 
 // base: ./
