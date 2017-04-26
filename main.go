@@ -177,6 +177,7 @@ func modifiedMD(file_in, dir_out string) {
 
 func copyFile(file_in, dir_out string) {
 	goutils.WriteFile(filepath.Join(dir_out, file_in), goutils.ReadFile(file_in))
+	fmt.Printf("copy file:%s ==> %s\n", file_in, filepath.Join(dir_out, file_in))
 }
 
 // base: ./
