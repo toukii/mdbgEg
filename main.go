@@ -193,7 +193,7 @@ func walkCond(path string, info os.FileInfo, err error) error {
 	if strings.EqualFold(info.Name(), ".git") || strings.EqualFold(info.Name(), "./MDFs") {
 		return filepath.SkipDir
 	}
-	if info.IsDir() || !strings.HasSuffix(info.Name(), ".md") {
+	if info.IsDir() || !strings.HasSuffix(info.Name(), ".md") || !strings.HasSuffix(info.Name(), ".html") {
 		return nil
 	}
 	modifiedMD(path, abs)
