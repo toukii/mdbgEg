@@ -26,7 +26,7 @@ func main() {
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8080", nil)
 }
 
 var (
@@ -96,6 +96,7 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	// coding
+	copyFile("index.html", "./MDFs")
 	hj := jsnm.ReaderFmt(req.Body)
 	ma := hj.ArrGet("commits", "0", "modified").Arr()
 	pull := false
@@ -194,7 +195,7 @@ func walkCond(path string, info os.FileInfo, err error) error {
 	if strings.EqualFold(info.Name(), ".git") || strings.EqualFold(info.Name(), "./MDFs") {
 		return filepath.SkipDir
 	}
-	if info.IsDir() || !strings.HasSuffix(info.Name(), ".md") || !strings.HasSuffix(info.Name(), ".html") {
+	if info.IsDir() || !strings.HasSuffix(info.Name(), ".md") {
 		return nil
 	}
 	modifiedMD(path, abs)
