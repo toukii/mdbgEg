@@ -14,15 +14,12 @@ import (
 
 	"github.com/everfore/rpcsv"
 	"github.com/toukii/goutils"
-	// "net"
 	"net/rpc"
 )
 
 func main() {
 	defer rpc_client.Close()
-	// defer lis.Close()
 	walkRPCRdr()
-	copyFile("index.html", "./MDFs")
 	http.HandleFunc("/callback", callback)
 	http.HandleFunc("/update", update)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
@@ -32,20 +29,14 @@ func main() {
 var (
 	exc_cmd    *exc.CMD
 	rpc_client *rpc.Client
-	// lis        net.Listener
-	tpl *template.Template
+	tpl        *template.Template
 )
 
 func init() {
 	var err error
-	// if lis, err = rpcsv.RPCServe("88"); err != nil {
-	// 	return
-	// }
 	exc_cmd = exc.NewCMD("ls").Debug()
-	// rpc_client = rpcsv.RPCClient("127.0.0.1:88")
 	rpc_client = rpcsv.RPCClient("tcphub.t0.daoapp.io:61142")
 	if rpc_client == nil {
-		// lis.Close()
 		panic("rpc_client is nil!")
 	}
 	tpl, err = template.ParseFiles("theme.thm")
@@ -67,7 +58,8 @@ func update(rw http.ResponseWriter, req *http.Request) {
 }
 
 func updateTheme() {
-	fmt.Println("update")
+	fmt.Println("update theme")
+	exc_cmd.Reset("rm -rf MDFs").Execute()
 	tpl1, err := template.ParseFiles("theme.thm")
 	if goutils.CheckErr(err) {
 		return
@@ -78,25 +70,24 @@ func updateTheme() {
 
 // Webhooks callback
 func callback(rw http.ResponseWriter, req *http.Request) {
-	fmt.Printf("Refer:%s\n", req.Referer())
-	fmt.Printf("req:%#v\n", req)
+	// fmt.Printf("Refer:%s\n", req.Referer())
+	// fmt.Printf("req:%#v\n", req)
 
 	usa := req.UserAgent()
 	// fmt.Printf("UserAgent:%s\n", usa)
-	/*if !strings.Contains(usa, "GitHub-Hookshot/") && !strings.Contains(usa, "Coding.net Hook") {*/
-	/*	fmt.Println("CSRF Attack!")*/
-	/*	http.Redirect(rw, req, "/", 302)*/
-	/*	return*/
-	/*}*/
-	// coding
+	if !strings.Contains(usa, "GitHub-Hookshot/") && !strings.Contains(usa, "Coding.net Hook") {
+		fmt.Println("CSRF Attack!")
+		http.Redirect(rw, req, "/", 302)
+		return
+	}
+	/*// coding
 	if strings.Contains(usa, "Coding.net Hook") {
 		exc_cmd.Reset("git pull origin master:master").Execute()
 		rpcsv.UpdataTheme()
 		updateTheme()
 		return
-	}
+	}*/
 	// coding
-	copyFile("index.html", "./MDFs")
 	hj := jsnm.ReaderFmt(req.Body)
 	ma := hj.ArrGet("commits", "0", "modified").Arr()
 	pull := false
@@ -166,7 +157,7 @@ func modifiedMD(file_in, dir_out string) {
 	}
 	// fmt.Println(goutils.ToString(out))
 	target := fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0]))
-
+	goutils.ReWriteFile(target, []byte{})
 	goutils.Mkdir(fmt.Sprintf("%s", filepath.Join(dir_out, dir)))
 	outfile, _ := os.OpenFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), os.O_CREATE|os.O_WRONLY, 0666)
 	defer outfile.Close()
@@ -192,9 +183,18 @@ var (
 )
 
 func walkCond(path string, info os.FileInfo, err error) error {
-	if strings.EqualFold(info.Name(), ".git") || strings.EqualFold(info.Name(), "./MDFs") {
+	if strings.EqualFold(info.Name(), ".git") || strings.Contains(info.Name(), "MDFs") {
 		return filepath.SkipDir
 	}
+	abspath := filepath.Join(abs, path)
+	if info.IsDir() {
+		goutils.Mkdir(abspath)
+		fmt.Printf("mkdir %s\n", abspath)
+		return nil
+	}
+	copyFile(path, abs)
+	/*goutils.ReWriteFile(abspath, goutils.ReadFile(path))
+	fmt.Printf("copy file:%s ==> %s\n", path, abspath)*/
 	if info.IsDir() || !strings.HasSuffix(info.Name(), ".md") {
 		return nil
 	}
