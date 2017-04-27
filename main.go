@@ -103,11 +103,10 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 			updateTheme()
 			return
 		}
-		if strings.HasSuffix(fs, ".html") {
-			goutils.WriteFile(filepath.Join("./MDFs", fs), goutils.ReadFile(fs))
-		}
 		if strings.HasSuffix(fs, ".md") {
 			modifiedMD(fs, "./MDFs")
+		} else {
+			goutils.ReWriteFile(filepath.Join("./MDFs", fs), goutils.ReadFile(fs))
 		}
 	}
 	aa := hj.ArrGet("commits", "0", "added").Arr()
@@ -119,6 +118,8 @@ func callback(rw http.ResponseWriter, req *http.Request) {
 		fmt.Printf("added-%d:%v\n", i, fs)
 		if strings.HasSuffix(fs, ".md") {
 			modifiedMD(fs, "./MDFs")
+		} else {
+			goutils.ReWriteFile(filepath.Join("./MDFs", fs), goutils.ReadFile(fs))
 		}
 	}
 	ra := hj.ArrGet("commits", "0", "removed").Arr()
