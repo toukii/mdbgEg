@@ -160,12 +160,21 @@ func modifiedMD(file_in, dir_out string) {
 	target := fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0]))
 	goutils.ReWriteFile(target, []byte{})
 	goutils.Mkdir(fmt.Sprintf("%s", filepath.Join(dir_out, dir)))
-	outfile, _ := os.OpenFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), os.O_CREATE|os.O_WRONLY, 0666)
+	goutils.WriteFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), []byte(nil))
+	outfile, erro := os.OpenFile(fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0])), os.O_CREATE|os.O_WRONLY, 0666)
+	if goutils.CheckErr(erro){
+		return
+	}
 	defer outfile.Close()
 	dt := make(map[string]interface{})
 	dt["MDContent"] = template.HTML(goutils.ToString(out))
-	tpl.Execute(outfile, dt)
-	fmt.Println(file_in, " ==> ", target)
+	// fmt.Println(dt)
+	// fmt.Println("md:\n",dt["MDContent"])
+	// tpl = defaultTheme()
+	erre:=tpl.Execute(outfile, dt)
+	if !goutils.CheckErr(erre){
+		fmt.Println(file_in, " ==> ", target)
+	}
 }
 
 func copyFile(file_in, dir_out string) {
