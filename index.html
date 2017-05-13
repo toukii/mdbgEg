@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>lrz</title>
+</head>
+<body>
+<input id="gzfile" name="gzfile" type="file" value=""  onchange="upload(this)" />
+<input id="gzfileStream" name="gzfileStream" type="file" value=""  onchange="streamUpload(this)" />
+<img src="page.png">
+<script type="text/javascript">
+    function upload(that){
+        // var filepath=$(that).val();
+        // if(filepath=="")
+        // {
+        //     return;
+        // }
+        // var extStart=filepath.lastIndexOf(".");
+        // var ext=filepath.substring(extStart,filepath.length).toUpperCase();
+        // if(".jpg|.png|.jpeg".toUpperCase().indexOf(ext.toUpperCase())==-1){
+        //    alert("只允许上传jpg、png、jpeg格式的图片");
+        //     return false;
+        // }
+        //以图片宽度为800进行压缩
+        lrz(that.files[0], {
+            width: 1024
+        }).then(function (rst) {
+            $.ajax({
+                url : "/upload",
+                type: "POST",
+                data : {"imgdata":rst.base64},//压缩后的base值
+                dataType:"text",
+                cache:false,
+                async:false,
+                success : function(data) {
+                    if ("success"==data) {
+                        alert("上传文件成功！");
+                    }
+                },
+                error : function(){
+                    alert("上传失败");
+                }
+            });
+        });
+    }
+
+    function streamUpload(that){
+        // var filepath=$(that).val();
+        // if(filepath=="")
+        // {
+        //     return;
+        // }
+        // var extStart=filepath.lastIndexOf(".");
+        // var ext=filepath.substring(extStart,filepath.length).toUpperCase();
+        // if(".jpg|.png|.jpeg".toUpperCase().indexOf(ext.toUpperCase())==-1){
+        //    alert("只允许上传jpg、png、jpeg格式的图片");
+        //     return false;
+        // }
+        //以图片宽度为800进行压缩
+        lrz(that.files[0], {
+            width: 1024
+        }).then(function (rst) {
+            $.ajax({
+                url : "/upload/streamUpload",
+                type: "POST",
+                data : rst.base64,//压缩后的base值
+                dataType:"text",
+                cache:false,
+                async:false,
+                success : function(data) {
+                    if ("success"==data) {
+                        alert("上传文件成功！");
+                    }else{
+                        alert(data);
+                    }
+                },
+                error : function(){
+                    alert("上传失败");
+                }
+            });
+        });
+    }
+
+</script>
+<script src="http://7xku3c.com1.z0.glb.clouddn.com/static/js/jquery-1.10.2.min.js"></script>
+<script src="http://7xku3c.com1.z0.glb.clouddn.com//static/js/lrz.js"></script>
+</body>
+</html>

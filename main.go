@@ -20,10 +20,15 @@ import (
 func main() {
 	defer rpc_client.Close()
 	walkRPCRdr()
-	http.HandleFunc("/callback", callback)
-	http.HandleFunc("/update", update)
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
-	http.ListenAndServe(":80", nil)
+	upload:=&goutils.UploadHandler{}
+	mux:= http.NewServeMux()
+	mux.Handle("/upload",upload)
+	mux.Handle("/upload/streamUpload",upload)
+	mux.HandleFunc("/callback", callback)
+	mux.HandleFunc("/update", update)
+	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
+	http.ListenAndServe(":8080", mux)
+	
 }
 
 var (
