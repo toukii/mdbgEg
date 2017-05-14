@@ -27,7 +27,7 @@ func main() {
 	mux.HandleFunc("/callback", callback)
 	mux.HandleFunc("/update", update)
 	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":80", mux)
 	
 }
 
