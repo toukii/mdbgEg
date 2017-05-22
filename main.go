@@ -40,7 +40,9 @@ var (
 func init() {
 	var err error
 	exc_cmd = exc.NewCMD("ls").Debug()
-	rpc_client = rpcsv.RPCClient("tcphub.t0.daoapp.io:61142")
+	// rpc_client = rpcsv.RPCClient("tcphub.t0.daoapp.io:61142")
+	rpc_client = rpcsv.RPCClient("rpchub.t0.daoapp.io:61142")
+	// rpc_client = rpcsv.RPCClient("localhost:8800")
 	if rpc_client == nil {
 		panic("rpc_client is nil!")
 	}
