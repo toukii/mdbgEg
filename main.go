@@ -1,48 +1,52 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/everfore/exc"
-	"net/http"
-	"strings"
-
-	"github.com/toukii/jsnm"
-
 	"html/template"
+	"net/http"
+	"net/rpc"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 
+	"github.com/everfore/exc"
 	"github.com/everfore/rpcsv"
 	"github.com/toukii/goutils"
-	"net/rpc"
+	"github.com/toukii/jsnm"
 )
 
 func main() {
 	defer rpc_client.Close()
 	walkRPCRdr()
-	upload:=&goutils.UploadHandler{}
-	mux:= http.NewServeMux()
-	mux.Handle("/upload",upload)
-	mux.Handle("/upload/streamUpload",upload)
+	upload := &goutils.UploadHandler{}
+	mux := http.NewServeMux()
+	mux.Handle("/upload", upload)
+	mux.Handle("/upload/streamUpload", upload)
 	mux.HandleFunc("/callback", callback)
 	mux.HandleFunc("/update", update)
+	mux.HandleFunc("/TiNews", TiNews)
+	mux.HandleFunc("/TiNewsAPI", TiNewsAPI)
 	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./MDFs"))))
 	http.ListenAndServe(":80", mux)
-	
+
 }
 
 var (
 	exc_cmd    *exc.CMD
 	rpc_client *rpc.Client
 	tpl        *template.Template
+	bs         []byte
+	// rpc_tcp_server = "localhost:8800"
+	// rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
+	rpc_tcp_server = "rpchub.t0.daoapp.io:61142"
 )
 
 func init() {
 	var err error
 	exc_cmd = exc.NewCMD("ls").Debug()
-	// rpc_client = rpcsv.RPCClient("tcphub.t0.daoapp.io:61142")
-	rpc_client = rpcsv.RPCClient("rpchub.t0.daoapp.io:61142")
-	// rpc_client = rpcsv.RPCClient("localhost:8800")
+	rpc_client = rpcsv.RPCClient(rpc_tcp_server)
 	if rpc_client == nil {
 		panic("rpc_client is nil!")
 	}
@@ -52,12 +56,61 @@ func init() {
 	}
 }
 
+func connect() {
+	rpc_client = rpcsv.RPCClientWithCodec(rpc_tcp_server)
+	go func() {
+		time.Sleep(2e9)
+		rpc_client.Close()
+	}()
+}
+
 func defaultTheme() *template.Template {
 	dtpl, err := template.New("default").Parse("{{.MDContent}}")
 	if goutils.CheckErr(err) {
 		panic(err)
 	}
 	return dtpl
+}
+
+func TiNewsAPI(rw http.ResponseWriter, req *http.Request) {
+	type TiNews struct {
+		Main       string `json:"main"`
+		AuthorName string `json:"author_name"`
+	}
+
+	news := struct {
+		Data []TiNews `json:"data"`
+	}{
+		Data: []TiNews{
+			TiNews{
+				Main:       "发布平台运营专员兼软件开发时永宾已确定从银联商务离职。" + time.Now().Format(" 2006/1/2 15:04 "),
+				AuthorName: "Ti媒体记者/toukii",
+			},
+		},
+	}
+	bs, err := json.Marshal(news)
+	if goutils.CheckErr(err) {
+		fmt.Fprint(rw, err)
+	} else {
+		rw.Write(bs)
+	}
+}
+
+func TiNews(rw http.ResponseWriter, req *http.Request) {
+	out := make([]byte, 1)
+	i := 0
+retry:
+	err := rpc_client.Call("RPC.TiNews", &i, &out)
+	if goutils.CheckErr(err) {
+		if strings.Contains(err.Error(), "connection") && i < 6 {
+			connect()
+			i++
+			goto retry
+		}
+		fmt.Fprint(rw, err)
+		return
+	}
+	rw.Write(out)
 }
 
 func update(rw http.ResponseWriter, req *http.Request) {
@@ -159,21 +212,29 @@ func modifiedMD(file_in, dir_out string) {
 	fs := strings.Split(filename, ".")
 	in := goutils.ReadFile(file_in)
 	out := make([]byte, 1)
-	err = rpcsv.Markdown(rpc_client, &in, &out)
+	i := 0
+retry:
+	i++
+	err = rpc_client.Call("RPC.Markdown", &in, &out)
+	// err = rpcsv.Markdown(rpc_client, &in, &out)
 	if goutils.CheckErr(err) {
+		if i < 6 {
+			connect()
+			goto retry
+		}
 		return
 	}
 	target := fmt.Sprintf("%s.html", filepath.Join(dir_out, dir, fs[0]))
 	// goutils.Mkdir(fmt.Sprintf("%s", filepath.Join(dir_out, dir)))
 	outfile, erro := os.OpenFile(target, os.O_CREATE|os.O_WRONLY, 0666)
-	if goutils.CheckErr(erro){
+	if goutils.CheckErr(erro) {
 		return
 	}
 	defer outfile.Close()
 	dt := make(map[string]interface{})
 	dt["MDContent"] = template.HTML(goutils.ToString(out))
-	erre:=tpl.Execute(outfile, dt)
-	if !goutils.CheckErr(erre){
+	erre := tpl.Execute(outfile, dt)
+	if !goutils.CheckErr(erre) {
 		fmt.Println(file_in, " ==> ", target)
 	}
 }
