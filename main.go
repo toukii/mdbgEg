@@ -40,7 +40,9 @@ var (
 	bs         []byte
 	// rpc_tcp_server = "localhost:8800"
 	// rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
-	rpc_tcp_server = "rpchub.t0.daoapp.io:61142"
+	// rpc_tcp_server = "rpchub.t0.daoapp.io:61142"
+	rpc_tcp_server = "rpchub.t1.daoapp.io:61160"
+	// rpc_tcp_server = "192.168.1.114:8800"
 )
 
 func init() {
